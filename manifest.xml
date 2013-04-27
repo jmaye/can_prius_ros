@@ -1,0 +1,14 @@
+<package>
+  <description brief="can_prius_ros">
+
+     ROS wrapper around libcan-prius.
+
+  </description>
+  <author>Jerome Maye</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/can_prius_ros</url>
+
+</package>
+
+
