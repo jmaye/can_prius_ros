@@ -1,3 +1,5 @@
 build
 bin
+lib
 msg_gen
+src/can_prius_ros

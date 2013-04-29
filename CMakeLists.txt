@@ -23,6 +23,9 @@ message(Found ${LIBCAN_PRIUS_INCLUDE_DIR})
 find_library(LIBCAN_PRIUS_SENSOR_LIBRARY can-prius-sensor
   /usr/lib
 )
+find_library(LIBCAN_PRIUS_TYPES_LIBRARY can-prius-types
+  /usr/lib
+)
 include_directories(
   ${LIBCAN_PRIUS_INCLUDE_DIR}
 )
@@ -38,9 +41,9 @@ rosbuild_genmsg()
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
+rosbuild_add_library(${PROJECT_NAME} src/CANPriusNode.cpp)
+target_link_libraries(${PROJECT_NAME} ${LIBCAN_PRIUS_SENSOR_LIBRARY}
+  ${LIBCAN_PRIUS_TYPES_LIBRARY})
 rosbuild_add_executable(can_prius_node src/can_prius_node.cpp)
-target_link_libraries(can_prius_node ${LIBCAN_PRIUS_SENSOR_LIBRARY})
+target_link_libraries(can_prius_node ${PROJECT_NAME}
+  ${LIBCAN_PRIUS_SENSOR_LIBRARY})

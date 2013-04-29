@@ -1,0 +1,7 @@
+<launch>
+
+  <node name="can_prius" pkg="can_prius_ros" type="can_prius_node" output="screen">
+    <param name="canDevice" value="/dev/cpc_usb_0"/>
+  </node>
+
+</launch>
