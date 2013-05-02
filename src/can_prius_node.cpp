@@ -39,6 +39,6 @@ int main(int argc, char** argv) {
   catch (...) {
       ROS_ERROR_STREAM("Unknown Exception");
       returnValue = -2;
-    }
+  }
   return returnValue;
 }
