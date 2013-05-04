@@ -39,6 +39,7 @@
 
 #include "can_prius_ros/FrontWheelsSpeedMsg.h"
 #include "can_prius_ros/RearWheelsSpeedMsg.h"
+#include "can_prius_ros/Steering1Msg.h"
 
 namespace janeth {
 
@@ -48,9 +49,9 @@ namespace janeth {
 
   CANPriusNode::CANPriusNode(const ros::NodeHandle& nh) :
       _nodeHandle(nh) {
-//    _nodeHandle.param<std::string>("ip_address", mIp, "129.132.39.171");
     _nodeHandle.param<std::string>("frame_id", _frameId,
       "vehicle_odometry_link");
+    _nodeHandle.param<std::string>("can_device", _canDevice, "/dev/cpc_usb_0");
     const int queueDepth = 100;
     _frontWheelsSpeedPublisher =
       _nodeHandle.advertise<can_prius_ros::FrontWheelsSpeedMsg>(
@@ -58,15 +59,9 @@ namespace janeth {
     _rearWheelsSpeedPublisher =
       _nodeHandle.advertise<can_prius_ros::RearWheelsSpeedMsg>(
       "rear_wheels_speed", queueDepth);
-  }
-
-  CANPriusNode::CANPriusNode(const CANPriusNode& other) {
-  }
-
-  CANPriusNode& CANPriusNode::operator = (const CANPriusNode& other) {
-    if (this != &other) {
-    }
-    return *this;
+    _steering1Publisher =
+      _nodeHandle.advertise<can_prius_ros::Steering1Msg>(
+      "steering1", queueDepth);
   }
 
   CANPriusNode::~CANPriusNode() {
@@ -98,8 +93,18 @@ namespace janeth {
     _rearWheelsSpeedPublisher.publish(rwsMsg);
   }
 
+  void CANPriusNode::publishSteering1(const ros::Time& timestamp,
+      const Steering1& st) {
+    boost::shared_ptr<can_prius_ros::Steering1Msg> stMsg(
+      new can_prius_ros::Steering1Msg);
+    stMsg->header.stamp = timestamp;
+    stMsg->header.frame_id = _frameId;
+    stMsg->value = st.mValue;
+    _steering1Publisher.publish(stMsg);
+  }
+
   void CANPriusNode::spin() {
-    CANConnection device;
+    CANConnection device(_canDevice);
     PRIUSReader reader(device);
     while (ros::ok()) {
       try {
@@ -124,6 +129,7 @@ namespace janeth {
         }
         else if (message->instanceOf<Steering1>()) {
           const Steering1& st = message->typeCast<Steering1>();
+          publishSteering1(timestamp, st);
         }
         else if (message->instanceOf<Steering2>()) {
           const Steering2& st = message->typeCast<Steering2>();

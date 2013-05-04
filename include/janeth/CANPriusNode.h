@@ -30,6 +30,7 @@
 
 class FrontWheelsSpeed;
 class RearWheelsSpeed;
+class Steering1;
 
 namespace janeth {
 
@@ -44,9 +45,13 @@ namespace janeth {
     /// Constructor
     CANPriusNode(const ros::NodeHandle& nh);
     /// Copy constructor
-    CANPriusNode(const CANPriusNode& other);
-    /// Assignment operator
-    CANPriusNode& operator = (const CANPriusNode& other);
+    CANPriusNode(const CANPriusNode& other) = delete;
+    /// Copy assignment operator
+    CANPriusNode& operator = (const CANPriusNode& other) = delete;
+    /// Move constructor
+    CANPriusNode(CANPriusNode&& other) = delete;
+    /// Move assignment operator
+    CANPriusNode& operator = (CANPriusNode&& other) = delete;
     /// Destructor
     virtual ~CANPriusNode();
     /** @}
@@ -70,6 +75,8 @@ namespace janeth {
     /// Publishes the rear wheel speed
     void publishRearWheelsSpeed(const ros::Time& timestamp,
       const RearWheelsSpeed& rws);
+    /// Publishes the steering1
+    void publishSteering1(const ros::Time& timestamp, const Steering1& st);
     /** @}
       */
 
@@ -82,6 +89,10 @@ namespace janeth {
     ros::Publisher _frontWheelsSpeedPublisher;
     /// Rear wheel speed publisher
     ros::Publisher _rearWheelsSpeedPublisher;
+    /// Steering1 publisher
+    ros::Publisher _steering1Publisher;
+    /// CAN device
+    std::string _canDevice;
     /// Frame ID
     std::string _frameId;
     /** @}
