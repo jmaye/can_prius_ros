@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/can_prius_ros</url>
 
   <depend package="roscpp"/>
+  <depend package="diagnostic_updater"/>
   <rosdep name="libcan-prius-dev"/>
 
 </package>

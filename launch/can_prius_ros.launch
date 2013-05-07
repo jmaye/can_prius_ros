@@ -1,7 +1,12 @@
 <launch>
-
   <node name="can_prius" pkg="can_prius_ros" type="can_prius_node" output="screen">
-    <param name="can_device" value="/dev/cpc_usb_0"/>
+    <param name="can_device" type="str" value="/dev/cpc_usb_0"/>
+    <param name="retry_timeout" type="double" value="1"/>
+    <param name="fws_min_freq" type="double" value="1"/>
+    <param name="fws_max_freq" type="double" value="100"/>
+    <param name="rws_min_freq" type="double" value="1"/>
+    <param name="rws_max_freq" type="double" value="100"/>
+    <param name="st1_min_freq" type="double" value="1"/>
+    <param name="st1_max_freq" type="double" value="100"/>
   </node>
-
 </launch>

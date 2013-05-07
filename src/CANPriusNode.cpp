@@ -18,7 +18,7 @@
 
 #include "janeth/CANPriusNode.h"
 
-#include <memory>
+#include <diagnostic_updater/publisher.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -36,6 +36,7 @@
 #include <libcan-prius/types/Acceleration1.h>
 #include <libcan-prius/types/Acceleration2.h>
 #include <libcan-prius/exceptions/IOException.h>
+#include <libcan-prius/base/Timer.h>
 
 #include "can_prius_ros/FrontWheelsSpeedMsg.h"
 #include "can_prius_ros/RearWheelsSpeedMsg.h"
@@ -51,7 +52,15 @@ namespace janeth {
       _nodeHandle(nh) {
     _nodeHandle.param<std::string>("frame_id", _frameId,
       "vehicle_odometry_link");
-    _nodeHandle.param<std::string>("can_device", _canDevice, "/dev/cpc_usb_0");
+    _nodeHandle.param<std::string>("can_device", _canDeviceStr,
+      "/dev/cpc_usb_0");
+    _nodeHandle.param<double>("retry_timeout", _retryTimeout, 1);
+    _nodeHandle.param<double>("fws_min_freq", _fwsMinFreq, 10);
+    _nodeHandle.param<double>("fws_max_freq", _fwsMaxFreq, 100);
+    _nodeHandle.param<double>("rws_min_freq", _rwsMinFreq, 10);
+    _nodeHandle.param<double>("rws_max_freq", _rwsMaxFreq, 100);
+    _nodeHandle.param<double>("st1_min_freq", _st1MinFreq, 10);
+    _nodeHandle.param<double>("st1_max_freq", _st1MaxFreq, 100);
     const int queueDepth = 100;
     _frontWheelsSpeedPublisher =
       _nodeHandle.advertise<can_prius_ros::FrontWheelsSpeedMsg>(
@@ -62,6 +71,21 @@ namespace janeth {
     _steering1Publisher =
       _nodeHandle.advertise<can_prius_ros::Steering1Msg>(
       "steering1", queueDepth);
+    _updater.setHardwareID("none");
+    _updater.add("CAN connection", this, &CANPriusNode::diagnoseCANConnection);
+    _fwsFreq.reset(new diagnostic_updater::HeaderlessTopicDiagnostic(
+      "front_wheels_speed", _updater,
+      diagnostic_updater::FrequencyStatusParam(&_fwsMinFreq, &_fwsMaxFreq,
+      0.1, 10)));
+    _rwsFreq.reset(new diagnostic_updater::HeaderlessTopicDiagnostic(
+      "rear_wheels_speed", _updater,
+      diagnostic_updater::FrequencyStatusParam(&_rwsMinFreq, &_rwsMaxFreq,
+      0.1, 10)));
+    _st1Freq.reset(new diagnostic_updater::HeaderlessTopicDiagnostic(
+      "steering1", _updater,
+      diagnostic_updater::FrequencyStatusParam(&_st1MinFreq, &_st1MaxFreq,
+      0.1, 10)));
+    _updater.force_update();
   }
 
   CANPriusNode::~CANPriusNode() {
@@ -80,6 +104,7 @@ namespace janeth {
     fwsMsg->Right = fws.mRight;
     fwsMsg->Left = fws.mLeft;
     _frontWheelsSpeedPublisher.publish(fwsMsg);
+    _fwsFreq->tick();
   }
 
   void CANPriusNode::publishRearWheelsSpeed(const ros::Time& timestamp,
@@ -91,6 +116,7 @@ namespace janeth {
     rwsMsg->Right = rws.mRight;
     rwsMsg->Left = rws.mLeft;
     _rearWheelsSpeedPublisher.publish(rwsMsg);
+    _rwsFreq->tick();
   }
 
   void CANPriusNode::publishSteering1(const ros::Time& timestamp,
@@ -101,11 +127,24 @@ namespace janeth {
     stMsg->header.frame_id = _frameId;
     stMsg->value = st.mValue;
     _steering1Publisher.publish(stMsg);
+    _st1Freq->tick();
+  }
+
+  void CANPriusNode::diagnoseCANConnection(
+      diagnostic_updater::DiagnosticStatusWrapper& status) {
+    if (_canConnection != nullptr && _canConnection->isOpen())
+      status.summaryf(diagnostic_msgs::DiagnosticStatus::OK,
+        "CAN connection opened on %s.",
+        _canConnection->getDevicePathStr().c_str());
+    else
+     status.summaryf(diagnostic_msgs::DiagnosticStatus::ERROR,
+      "CAN connection closed.");
   }
 
   void CANPriusNode::spin() {
-    CANConnection device(_canDevice);
-    PRIUSReader reader(device);
+    _canConnection.reset(new CANConnection(_canDeviceStr));
+    PRIUSReader reader(*_canConnection);
+    Timer timer;
     while (_nodeHandle.ok()) {
       try {
         std::shared_ptr<PRIUSMessage> message = reader.readMessage();
@@ -145,9 +184,11 @@ namespace janeth {
         }
       } 
       catch (const IOException& e) {
-        ROS_WARN_STREAM("IO Exception: " << e.what()
-          << ". Attempting to continue");
+        ROS_WARN_STREAM("IOException: " << e.what());
+        ROS_WARN_STREAM("Retrying in " << _retryTimeout << " [s]");
+        timer.sleep(_retryTimeout);
       }
+      _updater.update();
       ros::spinOnce();
     }
   }

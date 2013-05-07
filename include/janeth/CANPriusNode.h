@@ -25,12 +25,19 @@
 #define CAN_PRIUS_NODE_H
 
 #include <string>
+#include <memory>
 
 #include <ros/ros.h>
+#include <diagnostic_updater/diagnostic_updater.h>
 
 class FrontWheelsSpeed;
 class RearWheelsSpeed;
 class Steering1;
+class CANConnection;
+
+namespace diagnostic_updater {
+  class HeaderlessTopicDiagnostic;
+}
 
 namespace janeth {
 
@@ -77,6 +84,9 @@ namespace janeth {
       const RearWheelsSpeed& rws);
     /// Publishes the steering1
     void publishSteering1(const ros::Time& timestamp, const Steering1& st);
+    /// Diagnose the CAN connection
+    void diagnoseCANConnection(diagnostic_updater::DiagnosticStatusWrapper&
+      status);
     /** @}
       */
 
@@ -91,10 +101,34 @@ namespace janeth {
     ros::Publisher _rearWheelsSpeedPublisher;
     /// Steering1 publisher
     ros::Publisher _steering1Publisher;
-    /// CAN device
-    std::string _canDevice;
     /// Frame ID
     std::string _frameId;
+    /// CAN device
+    std::string _canDeviceStr;
+    /// CAN connection
+    std::shared_ptr<CANConnection> _canConnection;
+    /// Retry timeout for CAN
+    double _retryTimeout;
+    /// Diagnostic updater
+    diagnostic_updater::Updater _updater;
+    /// Frequency diagnostic for front wheels speed
+    std::shared_ptr<diagnostic_updater::HeaderlessTopicDiagnostic> _fwsFreq;
+    /// Front wheels speed minimum frequency
+    double _fwsMinFreq;
+    /// Front wheels speed maximum frequency
+    double _fwsMaxFreq;
+    /// Frequency diagnostic for rear wheels speed
+    std::shared_ptr<diagnostic_updater::HeaderlessTopicDiagnostic> _rwsFreq;
+    /// Rear wheels speed minimum frequency
+    double _rwsMinFreq;
+    /// Rear wheels speed maximum frequency
+    double _rwsMaxFreq;
+    /// Frequency diagnostic for steering1
+    std::shared_ptr<diagnostic_updater::HeaderlessTopicDiagnostic> _st1Freq;
+    /// Steering1 1minimum frequency
+    double _st1MinFreq;
+    /// Steering1 maximum frequency
+    double _st1MaxFreq;
     /** @}
       */
 
