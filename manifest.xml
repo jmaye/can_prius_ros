@@ -10,5 +10,6 @@
   <url>http://ros.org/wiki/can_prius_ros</url>
 
   <depend package="roscpp"/>
+  <rosdep name="libcan-prius-dev"/>
 
 </package>
