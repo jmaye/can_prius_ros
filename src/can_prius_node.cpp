@@ -27,18 +27,17 @@
 int main(int argc, char** argv) {
   ros::init(argc, argv, "can_prius");
   ros::NodeHandle nh("~");
-  int returnValue = 0;
   try {
     janeth::CANPriusNode cn(nh);
     cn.spin();
   }
   catch (const std::exception& e) {
     ROS_ERROR_STREAM("Exception: " << e.what());
-    returnValue = -1;
+    return 1;
   }
   catch (...) {
-      ROS_ERROR_STREAM("Unknown Exception");
-      returnValue = -2;
+    ROS_ERROR_STREAM("Unknown Exception");
+    return 1;
   }
-  return returnValue;
+  return 0;
 }
