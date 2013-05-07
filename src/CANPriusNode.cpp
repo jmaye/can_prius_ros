@@ -106,7 +106,7 @@ namespace janeth {
   void CANPriusNode::spin() {
     CANConnection device(_canDevice);
     PRIUSReader reader(device);
-    while (ros::ok()) {
+    while (_nodeHandle.ok()) {
       try {
         std::shared_ptr<PRIUSMessage> message = reader.readMessage();
         const ros::Time timestamp = ros::Time::now();
