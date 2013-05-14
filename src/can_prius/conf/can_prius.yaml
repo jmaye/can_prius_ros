@@ -8,4 +8,6 @@ diagnostics:
   rws_max_freq: 100.0
   st1_min_freq: 1.0
   st1_max_freq: 100.0
-queue_depth: 100
+ros:
+  queue_depth: 100
+  frame_id: "vehicle_odometry_link"

@@ -183,8 +183,9 @@ namespace prius {
   }
 
   void CANPriusNode::getParameters() {
-    _nodeHandle.param<std::string>("frame_id", _frameId,
+    _nodeHandle.param<std::string>("ros/frame_id", _frameId,
       "vehicle_odometry_link");
+    _nodeHandle.param<int>("ros/queue_depth", _queueDepth, 100);
     _nodeHandle.param<std::string>("connection/can_device", _canDeviceStr,
       "/dev/cpc_usb_0");
     _nodeHandle.param<double>("connection/retry_timeout", _retryTimeout, 1);
@@ -194,7 +195,6 @@ namespace prius {
     _nodeHandle.param<double>("diagnostics/rws_max_freq", _rwsMaxFreq, 100);
     _nodeHandle.param<double>("diagnostics/st1_min_freq", _st1MinFreq, 10);
     _nodeHandle.param<double>("diagnostics/st1_max_freq", _st1MaxFreq, 100);
-    _nodeHandle.param<int>("queue_depth", _queueDepth, 100);
   }
 
 }

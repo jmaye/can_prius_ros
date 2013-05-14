@@ -1,3 +1,9 @@
+can-prius-ros (0.1-15) precise; urgency=low
+
+  * changing parameters 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Tue, 14 May 2013 20:27:53 +0000
+
 can-prius-ros (0.1-14) precise; urgency=low
 
   * changing names 
