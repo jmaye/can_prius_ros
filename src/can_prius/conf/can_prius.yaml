@@ -1,0 +1,11 @@
+connection:
+  can_device: "/dev/cpc_usb_0"
+  retry_timeout: 1.0
+diagnostics:
+  fws_min_freq: 1.0
+  fws_max_freq: 100.0
+  rws_min_freq: 1.0
+  rws_max_freq: 100.0
+  st1_min_freq: 1.0
+  st1_max_freq: 100.0
+queue_depth: 100

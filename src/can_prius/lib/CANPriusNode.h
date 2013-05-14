@@ -39,7 +39,7 @@ namespace diagnostic_updater {
   class HeaderlessTopicDiagnostic;
 }
 
-namespace janeth {
+namespace prius {
 
   /** The class CANPriusNode implements the CAN Prius node.
       \brief CAN Prius node
@@ -87,6 +87,8 @@ namespace janeth {
     /// Diagnose the CAN connection
     void diagnoseCANConnection(diagnostic_updater::DiagnosticStatusWrapper&
       status);
+    /// Retrieves parameters
+    void getParameters();
     /** @}
       */
 
@@ -129,6 +131,8 @@ namespace janeth {
     double _st1MinFreq;
     /// Steering1 maximum frequency
     double _st1MaxFreq;
+    /// Queue depth
+    int _queueDepth;
     /** @}
       */
 

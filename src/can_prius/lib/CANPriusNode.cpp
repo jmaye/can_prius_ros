@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.       *
  ******************************************************************************/
 
-#include "janeth/CANPriusNode.h"
+#include "CANPriusNode.h"
 
 #include <diagnostic_updater/publisher.h>
 
@@ -38,11 +38,11 @@
 #include <libcan-prius/exceptions/IOException.h>
 #include <libcan-prius/base/Timer.h>
 
-#include "can_prius_ros/FrontWheelsSpeedMsg.h"
-#include "can_prius_ros/RearWheelsSpeedMsg.h"
-#include "can_prius_ros/Steering1Msg.h"
+#include "can_prius/FrontWheelsSpeedMsg.h"
+#include "can_prius/RearWheelsSpeedMsg.h"
+#include "can_prius/Steering1Msg.h"
 
-namespace janeth {
+namespace prius {
 
 /******************************************************************************/
 /* Constructors and Destructor                                                */
@@ -50,27 +50,16 @@ namespace janeth {
 
   CANPriusNode::CANPriusNode(const ros::NodeHandle& nh) :
       _nodeHandle(nh) {
-    _nodeHandle.param<std::string>("frame_id", _frameId,
-      "vehicle_odometry_link");
-    _nodeHandle.param<std::string>("can_device", _canDeviceStr,
-      "/dev/cpc_usb_0");
-    _nodeHandle.param<double>("retry_timeout", _retryTimeout, 1);
-    _nodeHandle.param<double>("fws_min_freq", _fwsMinFreq, 10);
-    _nodeHandle.param<double>("fws_max_freq", _fwsMaxFreq, 100);
-    _nodeHandle.param<double>("rws_min_freq", _rwsMinFreq, 10);
-    _nodeHandle.param<double>("rws_max_freq", _rwsMaxFreq, 100);
-    _nodeHandle.param<double>("st1_min_freq", _st1MinFreq, 10);
-    _nodeHandle.param<double>("st1_max_freq", _st1MaxFreq, 100);
-    const int queueDepth = 100;
+    getParameters();
     _frontWheelsSpeedPublisher =
-      _nodeHandle.advertise<can_prius_ros::FrontWheelsSpeedMsg>(
-      "front_wheels_speed", queueDepth);
+      _nodeHandle.advertise<can_prius::FrontWheelsSpeedMsg>(
+      "front_wheels_speed", _queueDepth);
     _rearWheelsSpeedPublisher =
-      _nodeHandle.advertise<can_prius_ros::RearWheelsSpeedMsg>(
-      "rear_wheels_speed", queueDepth);
+      _nodeHandle.advertise<can_prius::RearWheelsSpeedMsg>(
+      "rear_wheels_speed", _queueDepth);
     _steering1Publisher =
-      _nodeHandle.advertise<can_prius_ros::Steering1Msg>(
-      "steering1", queueDepth);
+      _nodeHandle.advertise<can_prius::Steering1Msg>(
+      "steering1", _queueDepth);
     _updater.setHardwareID("none");
     _updater.add("CAN connection", this, &CANPriusNode::diagnoseCANConnection);
     _fwsFreq.reset(new diagnostic_updater::HeaderlessTopicDiagnostic(
@@ -97,8 +86,8 @@ namespace janeth {
 
   void CANPriusNode::publishFrontWheelsSpeed(const ros::Time& timestamp,
       const FrontWheelsSpeed& fws) {
-    boost::shared_ptr<can_prius_ros::FrontWheelsSpeedMsg> fwsMsg(
-      new can_prius_ros::FrontWheelsSpeedMsg);
+    boost::shared_ptr<can_prius::FrontWheelsSpeedMsg> fwsMsg(
+      new can_prius::FrontWheelsSpeedMsg);
     fwsMsg->header.stamp = timestamp;
     fwsMsg->header.frame_id = _frameId;
     fwsMsg->Right = fws.mRight;
@@ -109,8 +98,8 @@ namespace janeth {
 
   void CANPriusNode::publishRearWheelsSpeed(const ros::Time& timestamp,
       const RearWheelsSpeed& rws) {
-    boost::shared_ptr<can_prius_ros::RearWheelsSpeedMsg> rwsMsg(
-      new can_prius_ros::RearWheelsSpeedMsg);
+    boost::shared_ptr<can_prius::RearWheelsSpeedMsg> rwsMsg(
+      new can_prius::RearWheelsSpeedMsg);
     rwsMsg->header.stamp = timestamp;
     rwsMsg->header.frame_id = _frameId;
     rwsMsg->Right = rws.mRight;
@@ -121,8 +110,8 @@ namespace janeth {
 
   void CANPriusNode::publishSteering1(const ros::Time& timestamp,
       const Steering1& st) {
-    boost::shared_ptr<can_prius_ros::Steering1Msg> stMsg(
-      new can_prius_ros::Steering1Msg);
+    boost::shared_ptr<can_prius::Steering1Msg> stMsg(
+      new can_prius::Steering1Msg);
     stMsg->header.stamp = timestamp;
     stMsg->header.frame_id = _frameId;
     stMsg->value = st.mValue;
@@ -191,6 +180,21 @@ namespace janeth {
       _updater.update();
       ros::spinOnce();
     }
+  }
+
+  void CANPriusNode::getParameters() {
+    _nodeHandle.param<std::string>("frame_id", _frameId,
+      "vehicle_odometry_link");
+    _nodeHandle.param<std::string>("connection/can_device", _canDeviceStr,
+      "/dev/cpc_usb_0");
+    _nodeHandle.param<double>("connection/retry_timeout", _retryTimeout, 1);
+    _nodeHandle.param<double>("diagnostics/fws_min_freq", _fwsMinFreq, 10);
+    _nodeHandle.param<double>("diagnostics/fws_max_freq", _fwsMaxFreq, 100);
+    _nodeHandle.param<double>("diagnostics/rws_min_freq", _rwsMinFreq, 10);
+    _nodeHandle.param<double>("diagnostics/rws_max_freq", _rwsMaxFreq, 100);
+    _nodeHandle.param<double>("diagnostics/st1_min_freq", _st1MinFreq, 10);
+    _nodeHandle.param<double>("diagnostics/st1_max_freq", _st1MaxFreq, 100);
+    _nodeHandle.param<int>("queue_depth", _queueDepth, 100);
   }
 
 }

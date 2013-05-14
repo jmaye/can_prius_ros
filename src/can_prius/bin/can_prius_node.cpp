@@ -22,13 +22,13 @@
 
 #include <ros/ros.h>
 
-#include "janeth/CANPriusNode.h"
+#include "CANPriusNode.h"
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "can_prius");
   ros::NodeHandle nh("~");
   try {
-    janeth::CANPriusNode cn(nh);
+    prius::CANPriusNode cn(nh);
     cn.spin();
   }
   catch (const std::exception& e) {
