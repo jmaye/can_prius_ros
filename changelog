@@ -1,3 +1,9 @@
+can-prius-ros (0.1-14) precise; urgency=low
+
+  * changing names 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Tue, 14 May 2013 19:52:42 +0000
+
 can-prius-ros (0.1-13) precise; urgency=low
 
   * porting to remake

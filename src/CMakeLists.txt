@@ -3,5 +3,5 @@ remake_ros_package(
   DEPENDS roscpp diagnostic_updater
   EXTRA_BUILD_DEPENDS libcan-prius-dev
   EXTRA_RUN_DEPENDS libcan-prius
-  DESCRIPTION "ROS wrapper around libcan-prius."
+  DESCRIPTION "Driver for Toyota PRIUS CAN bus."
 )

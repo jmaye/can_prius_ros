@@ -6,7 +6,7 @@ remake_project(
   can-prius-ros
   VERSION 0.1
   RELEASE alpha
-  SUMMARY "ROS wrapper around libcan-prius."
+  SUMMARY "ROS driver for Toyota PRIUS CAN bus."
   AUTHOR "Jerome Maye"
   CONTACT "jerome.maye@mavt.ethz.ch"
   HOME "http://github.com/jmaye/can_prius_ros"
