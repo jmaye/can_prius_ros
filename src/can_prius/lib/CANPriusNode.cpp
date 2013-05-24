@@ -60,7 +60,7 @@ namespace prius {
     _steering1Publisher =
       _nodeHandle.advertise<can_prius::Steering1Msg>(
       "steering1", _queueDepth);
-    _updater.setHardwareID("none");
+    _updater.setHardwareID("Toyota PRIUS CAN bus");
     _updater.add("CAN connection", this, &CANPriusNode::diagnoseCANConnection);
     _fwsFreq.reset(new diagnostic_updater::HeaderlessTopicDiagnostic(
       "front_wheels_speed", _updater,

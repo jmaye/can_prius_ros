@@ -1,3 +1,9 @@
+can-prius-ros (0.1-16) precise; urgency=low
+
+  * changing hardware ID for diagnostics 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Fri, 24 May 2013 10:23:31 +0000
+
 can-prius-ros (0.1-15) precise; urgency=low
 
   * changing parameters 
