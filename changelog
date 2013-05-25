@@ -1,3 +1,9 @@
+can-prius-ros (0.1-17) precise; urgency=low
+
+  * frequency tuning, packet counters, diagnose improved
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Sat, 25 May 2013 10:44:34 +0000
+
 can-prius-ros (0.1-16) precise; urgency=low
 
   * changing hardware ID for diagnostics 

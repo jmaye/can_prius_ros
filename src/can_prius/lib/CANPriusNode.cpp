@@ -49,7 +49,10 @@ namespace prius {
 /******************************************************************************/
 
   CANPriusNode::CANPriusNode(const ros::NodeHandle& nh) :
-      _nodeHandle(nh) {
+      _nodeHandle(nh),
+      _fwsPacketCounter(0),
+      _rwsPacketCounter(0),
+      _st1PacketCounter(0) {
     getParameters();
     _frontWheelsSpeedPublisher =
       _nodeHandle.advertise<can_prius::FrontWheelsSpeedMsg>(
@@ -90,6 +93,7 @@ namespace prius {
       new can_prius::FrontWheelsSpeedMsg);
     fwsMsg->header.stamp = timestamp;
     fwsMsg->header.frame_id = _frameId;
+    fwsMsg->header.seq = _fwsPacketCounter++;
     fwsMsg->Right = fws.mRight;
     fwsMsg->Left = fws.mLeft;
     _frontWheelsSpeedPublisher.publish(fwsMsg);
@@ -102,6 +106,7 @@ namespace prius {
       new can_prius::RearWheelsSpeedMsg);
     rwsMsg->header.stamp = timestamp;
     rwsMsg->header.frame_id = _frameId;
+    rwsMsg->header.seq = _rwsPacketCounter++;
     rwsMsg->Right = rws.mRight;
     rwsMsg->Left = rws.mLeft;
     _rearWheelsSpeedPublisher.publish(rwsMsg);
@@ -114,6 +119,7 @@ namespace prius {
       new can_prius::Steering1Msg);
     stMsg->header.stamp = timestamp;
     stMsg->header.frame_id = _frameId;
+    stMsg->header.seq = _st1PacketCounter++;
     stMsg->value = st.mValue;
     _steering1Publisher.publish(stMsg);
     _st1Freq->tick();
@@ -127,7 +133,7 @@ namespace prius {
         _canConnection->getDevicePathStr().c_str());
     else
      status.summaryf(diagnostic_msgs::DiagnosticStatus::ERROR,
-      "CAN connection closed.");
+      "CAN connection closed on %s.", _canDeviceStr.c_str());
   }
 
   void CANPriusNode::spin() {
@@ -189,12 +195,12 @@ namespace prius {
     _nodeHandle.param<std::string>("connection/can_device", _canDeviceStr,
       "/dev/cpc_usb_0");
     _nodeHandle.param<double>("connection/retry_timeout", _retryTimeout, 1);
-    _nodeHandle.param<double>("diagnostics/fws_min_freq", _fwsMinFreq, 10);
-    _nodeHandle.param<double>("diagnostics/fws_max_freq", _fwsMaxFreq, 100);
-    _nodeHandle.param<double>("diagnostics/rws_min_freq", _rwsMinFreq, 10);
-    _nodeHandle.param<double>("diagnostics/rws_max_freq", _rwsMaxFreq, 100);
-    _nodeHandle.param<double>("diagnostics/st1_min_freq", _st1MinFreq, 10);
-    _nodeHandle.param<double>("diagnostics/st1_max_freq", _st1MaxFreq, 100);
+    _nodeHandle.param<double>("diagnostics/fws_min_freq", _fwsMinFreq, 48);
+    _nodeHandle.param<double>("diagnostics/fws_max_freq", _fwsMaxFreq, 72);
+    _nodeHandle.param<double>("diagnostics/rws_min_freq", _rwsMinFreq, 48);
+    _nodeHandle.param<double>("diagnostics/rws_max_freq", _rwsMaxFreq, 72);
+    _nodeHandle.param<double>("diagnostics/st1_min_freq", _st1MinFreq, 24);
+    _nodeHandle.param<double>("diagnostics/st1_max_freq", _st1MaxFreq, 36);
   }
 
 }

@@ -2,12 +2,12 @@ connection:
   can_device: "/dev/cpc_usb_0"
   retry_timeout: 1.0
 diagnostics:
-  fws_min_freq: 1.0
-  fws_max_freq: 100.0
-  rws_min_freq: 1.0
-  rws_max_freq: 100.0
-  st1_min_freq: 1.0
-  st1_max_freq: 100.0
+  fws_min_freq: 48.0
+  fws_max_freq: 72.0
+  rws_min_freq: 48.0
+  rws_max_freq: 72.0
+  st1_min_freq: 24.0
+  st1_max_freq: 36.0
 ros:
   queue_depth: 100
   frame_id: "vehicle_odometry_link"

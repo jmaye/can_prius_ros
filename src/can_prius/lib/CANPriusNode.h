@@ -133,6 +133,12 @@ namespace prius {
     double _st1MaxFreq;
     /// Queue depth
     int _queueDepth;
+    /// Front wheels speed packet counter
+    long _fwsPacketCounter;
+    /// Rear wheels speed packet counter
+    long _rwsPacketCounter;
+    /// Steering1 packet counter
+    long _st1PacketCounter;
     /** @}
       */
 
