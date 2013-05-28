@@ -1,3 +1,9 @@
+can-prius-ros (0.1-20) precise; urgency=low
+
+  * distribution on PPA 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Tue, 28 May 2013 18:46:36 +0000
+
 can-prius-ros (0.1-19) precise; urgency=low
 
   * changing /dev/cpc_usb_0 to /dev/cpc_usb0 
