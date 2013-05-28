@@ -193,7 +193,7 @@ namespace prius {
       "vehicle_odometry_link");
     _nodeHandle.param<int>("ros/queue_depth", _queueDepth, 100);
     _nodeHandle.param<std::string>("connection/can_device", _canDeviceStr,
-      "/dev/cpc_usb_0");
+      "/dev/cpc_usb0");
     _nodeHandle.param<double>("connection/retry_timeout", _retryTimeout, 1);
     _nodeHandle.param<double>("diagnostics/fws_min_freq", _fwsMinFreq, 48);
     _nodeHandle.param<double>("diagnostics/fws_max_freq", _fwsMaxFreq, 72);
