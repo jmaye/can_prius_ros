@@ -22,6 +22,7 @@ remake_ros_pack_deb()
 remake_ros_distribute_deb(
   DISTRIBUTION lucid
   SECTION libs
+  DEPENDS remake pkg-config
   UPLOAD ppa:jmaye/ros
   PASS CMAKE_BUILD_TYPE CAN_PRIUS_ROS_GIT_REVISION
 )
@@ -29,6 +30,7 @@ remake_ros_distribute_deb(
 remake_ros_distribute_deb(
   DISTRIBUTION precise
   SECTION libs
+  DEPENDS remake pkg-config
   UPLOAD ppa:jmaye/ros
   PASS CMAKE_BUILD_TYPE CAN_PRIUS_ROS_GIT_REVISION
 )

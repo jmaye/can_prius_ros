@@ -1,3 +1,9 @@
+can-prius-ros (0.1-21) precise; urgency=low
+
+  * missing dependencies 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Wed, 29 May 2013 07:57:26 +0000
+
 can-prius-ros (0.1-20) precise; urgency=low
 
   * distribution on PPA 
