@@ -1,3 +1,9 @@
+can-prius-ros (0.1-22) precise; urgency=low
+
+  * removing nullptr 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Wed, 29 May 2013 14:39:29 +0000
+
 can-prius-ros (0.1-21) precise; urgency=low
 
   * missing dependencies 

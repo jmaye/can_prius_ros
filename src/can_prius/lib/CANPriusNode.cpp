@@ -127,7 +127,7 @@ namespace prius {
 
   void CANPriusNode::diagnoseCANConnection(
       diagnostic_updater::DiagnosticStatusWrapper& status) {
-    if (_canConnection != nullptr && _canConnection->isOpen())
+    if (_canConnection && _canConnection->isOpen())
       status.summaryf(diagnostic_msgs::DiagnosticStatus::OK,
         "CAN connection opened on %s.",
         _canConnection->getDevicePathStr().c_str());
