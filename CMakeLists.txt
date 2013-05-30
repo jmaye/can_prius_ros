@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 include(ReMake)
 
 remake_project(
-  can-prius-ros
+  can-prius-ros-${ROS_DISTRIBUTION}
   VERSION 0.1
   RELEASE alpha
   SUMMARY "ROS driver for Toyota PRIUS CAN bus."
@@ -17,6 +17,8 @@ remake_project(
   EXTRA_CXX_FLAGS -std=c++0x
 )
 
+remake_var_name(GIT_REVISION_VAR ${REMAKE_PROJECT_NAME} GIT_REVISION)
+
 remake_ros_pack_deb()
 
 remake_ros_distribute_deb(
@@ -24,7 +26,8 @@ remake_ros_distribute_deb(
   SECTION libs
   DEPENDS remake pkg-config
   UPLOAD ppa:jmaye/ros
-  PASS CMAKE_BUILD_TYPE CAN_PRIUS_ROS_GIT_REVISION
+  PASS CMAKE_BUILD_TYPE ${GIT_REVISION_VAR}
+  FORCE_CONSISTENCY
 )
 
 remake_ros_distribute_deb(
@@ -32,5 +35,6 @@ remake_ros_distribute_deb(
   SECTION libs
   DEPENDS remake pkg-config
   UPLOAD ppa:jmaye/ros
-  PASS CMAKE_BUILD_TYPE CAN_PRIUS_ROS_GIT_REVISION
+  PASS CMAKE_BUILD_TYPE ${GIT_REVISION_VAR}
+  FORCE_CONSISTENCY
 )

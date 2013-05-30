@@ -1,3 +1,9 @@
+can-prius-ros (0.1-23) precise; urgency=low
+
+  * uipdate of remae for mixing up ROS distributions 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Thu, 30 May 2013 13:49:37 +0000
+
 can-prius-ros (0.1-22) precise; urgency=low
 
   * removing nullptr 
