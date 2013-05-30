@@ -1,5 +1,5 @@
 <launch>
-  <node name="can_prius" pkg="can_prius" type="can_prius_node" output="screen">
+  <node name="can_prius" pkg="can_prius" type="can_prius_node" output="screen" respawn="true">
     <rosparam command="load" file="$(find can_prius)/etc/can_prius.yaml"/>
   </node>
 </launch>
