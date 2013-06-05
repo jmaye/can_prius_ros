@@ -1,3 +1,9 @@
+can-prius-ros (0.1-25) precise; urgency=low
+
+  * changing frame_id 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Wed, 05 Jun 2013 17:35:55 +0000
+
 can-prius-ros (0.1-24) precise; urgency=low
 
   * make the node respawn 

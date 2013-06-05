@@ -10,4 +10,4 @@ diagnostics:
   st1_max_freq: 36.0
 ros:
   queue_depth: 100
-  frame_id: "vehicle_odometry_link"
+  frame_id: "/can_link"

@@ -190,7 +190,7 @@ namespace prius {
 
   void CANPriusNode::getParameters() {
     _nodeHandle.param<std::string>("ros/frame_id", _frameId,
-      "vehicle_odometry_link");
+      "/can_link");
     _nodeHandle.param<int>("ros/queue_depth", _queueDepth, 100);
     _nodeHandle.param<std::string>("connection/can_device", _canDeviceStr,
       "/dev/cpc_usb0");
