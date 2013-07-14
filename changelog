@@ -1,3 +1,9 @@
+can-prius-ros (0.1-27) precise; urgency=low
+
+  * update version
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Sun, 14 Jul 2013 15:35:40 +0000
+
 can-prius-ros (0.1-26) precise; urgency=low
 
   * groovy distribution 
