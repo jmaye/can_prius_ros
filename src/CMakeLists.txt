@@ -5,3 +5,4 @@ remake_ros_package(
   EXTRA_RUN_DEPENDS libcan-prius
   DESCRIPTION "Driver for Toyota PRIUS CAN bus."
 )
+remake_ros_package_config_generate(PACKAGE can_prius EXTRA_CFLAGS -std=c++0x)

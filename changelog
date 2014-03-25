@@ -1,3 +1,9 @@
+can-prius-ros (0.1-28) precise; urgency=low
+
+  * adding pkg-config 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Tue, 25 Mar 2014 17:00:35 +0100
+
 can-prius-ros (0.1-27) precise; urgency=low
 
   * update version
