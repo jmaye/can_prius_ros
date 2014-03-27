@@ -1,3 +1,9 @@
+can-prius-ros (0.1-31) precise; urgency=low
+
+  * issues with groovy 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Thu, 27 Mar 2014 13:37:41 +0100
+
 can-prius-ros (0.1-30) precise; urgency=low
 
   * should now work with groovy 
