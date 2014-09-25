@@ -32,11 +32,24 @@ if(${ROS_DISTRIBUTION} STREQUAL fuerte)
   )
 endif()
 
-remake_ros_distribute_deb(
-  DISTRIBUTION precise
-  SECTION libs
-  DEPENDS remake pkg-config
-  UPLOAD ppa:jmaye/ros
-  PASS CMAKE_BUILD_TYPE ${GIT_REVISION_VAR}
-  FORCE_CONSISTENCY
-)
+if(${ROS_DISTRIBUTION} STREQUAL fuerte OR ${ROS_DISTRIBUTION} STREQUAL groovy)
+  remake_ros_distribute_deb(
+    DISTRIBUTION precise
+    SECTION libs
+    DEPENDS remake pkg-config
+    UPLOAD ppa:jmaye/ros
+    PASS CMAKE_BUILD_TYPE ${GIT_REVISION_VAR}
+    FORCE_CONSISTENCY
+  )
+endif()
+
+if(${ROS_DISTRIBUTION} STREQUAL indigo)
+  remake_ros_distribute_deb(
+    DISTRIBUTION trusty
+    SECTION libs
+    DEPENDS remake pkg-config
+    UPLOAD ppa:jmaye/ros
+    PASS CMAKE_BUILD_TYPE ${GIT_REVISION_VAR}
+    FORCE_CONSISTENCY
+  )
+endif()

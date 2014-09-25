@@ -1,3 +1,9 @@
+can-prius-ros (0.1-32) precise; urgency=low
+
+  * porting to trusty 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Thu, 25 Sep 2014 16:13:56 +0200
+
 can-prius-ros (0.1-31) precise; urgency=low
 
   * issues with groovy 
