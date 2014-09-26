@@ -1,3 +1,9 @@
+can-prius-ros (0.1-33) precise; urgency=low
+
+  * cleaning the code 
+
+ -- Jerome Maye <jerome.maye@mavt.ethz.ch>  Fri, 26 Sep 2014 10:26:59 +0200
+
 can-prius-ros (0.1-32) precise; urgency=low
 
   * porting to trusty 

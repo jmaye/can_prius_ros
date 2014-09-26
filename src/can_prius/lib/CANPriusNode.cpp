@@ -21,6 +21,7 @@
 #include <diagnostic_updater/publisher.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 #include <libcan-prius/com/CANConnection.h>
 #include <libcan-prius/sensor/PRIUSReader.h>
@@ -65,18 +66,18 @@ namespace prius {
       "steering1", _queueDepth);
     _updater.setHardwareID("Toyota PRIUS CAN bus");
     _updater.add("CAN connection", this, &CANPriusNode::diagnoseCANConnection);
-    _fwsFreq.reset(new diagnostic_updater::HeaderlessTopicDiagnostic(
+    _fwsFreq = std::make_shared<diagnostic_updater::HeaderlessTopicDiagnostic>(
       "front_wheels_speed", _updater,
       diagnostic_updater::FrequencyStatusParam(&_fwsMinFreq, &_fwsMaxFreq,
-      0.1, 10)));
-    _rwsFreq.reset(new diagnostic_updater::HeaderlessTopicDiagnostic(
+      0.1, 10));
+    _rwsFreq = std::make_shared<diagnostic_updater::HeaderlessTopicDiagnostic>(
       "rear_wheels_speed", _updater,
       diagnostic_updater::FrequencyStatusParam(&_rwsMinFreq, &_rwsMaxFreq,
-      0.1, 10)));
-    _st1Freq.reset(new diagnostic_updater::HeaderlessTopicDiagnostic(
+      0.1, 10));
+    _st1Freq = std::make_shared<diagnostic_updater::HeaderlessTopicDiagnostic>(
       "steering1", _updater,
       diagnostic_updater::FrequencyStatusParam(&_st1MinFreq, &_st1MaxFreq,
-      0.1, 10)));
+      0.1, 10));
     _updater.force_update();
   }
 
@@ -89,39 +90,42 @@ namespace prius {
 
   void CANPriusNode::publishFrontWheelsSpeed(const ros::Time& timestamp,
       const FrontWheelsSpeed& fws) {
-    boost::shared_ptr<can_prius::FrontWheelsSpeedMsg> fwsMsg(
-      new can_prius::FrontWheelsSpeedMsg);
-    fwsMsg->header.stamp = timestamp;
-    fwsMsg->header.frame_id = _frameId;
-    fwsMsg->header.seq = _fwsPacketCounter++;
-    fwsMsg->Right = fws.mRight;
-    fwsMsg->Left = fws.mLeft;
-    _frontWheelsSpeedPublisher.publish(fwsMsg);
+    if (_frontWheelsSpeedPublisher.getNumSubscribers() > 0) {
+      auto fwsMsg = boost::make_shared<can_prius::FrontWheelsSpeedMsg>();
+      fwsMsg->header.stamp = timestamp;
+      fwsMsg->header.frame_id = _frameId;
+      fwsMsg->header.seq = _fwsPacketCounter++;
+      fwsMsg->Right = fws.mRight;
+      fwsMsg->Left = fws.mLeft;
+      _frontWheelsSpeedPublisher.publish(fwsMsg);
+    }
     _fwsFreq->tick();
   }
 
   void CANPriusNode::publishRearWheelsSpeed(const ros::Time& timestamp,
       const RearWheelsSpeed& rws) {
-    boost::shared_ptr<can_prius::RearWheelsSpeedMsg> rwsMsg(
-      new can_prius::RearWheelsSpeedMsg);
-    rwsMsg->header.stamp = timestamp;
-    rwsMsg->header.frame_id = _frameId;
-    rwsMsg->header.seq = _rwsPacketCounter++;
-    rwsMsg->Right = rws.mRight;
-    rwsMsg->Left = rws.mLeft;
-    _rearWheelsSpeedPublisher.publish(rwsMsg);
+    if (_rearWheelsSpeedPublisher.getNumSubscribers() > 0) {
+      auto rwsMsg = boost::make_shared<can_prius::RearWheelsSpeedMsg>();
+      rwsMsg->header.stamp = timestamp;
+      rwsMsg->header.frame_id = _frameId;
+      rwsMsg->header.seq = _rwsPacketCounter++;
+      rwsMsg->Right = rws.mRight;
+      rwsMsg->Left = rws.mLeft;
+      _rearWheelsSpeedPublisher.publish(rwsMsg);
+    }
     _rwsFreq->tick();
   }
 
   void CANPriusNode::publishSteering1(const ros::Time& timestamp,
       const Steering1& st) {
-    boost::shared_ptr<can_prius::Steering1Msg> stMsg(
-      new can_prius::Steering1Msg);
-    stMsg->header.stamp = timestamp;
-    stMsg->header.frame_id = _frameId;
-    stMsg->header.seq = _st1PacketCounter++;
-    stMsg->value = st.mValue;
-    _steering1Publisher.publish(stMsg);
+    if (_steering1Publisher.getNumSubscribers() > 0) {
+      auto stMsg = boost::make_shared<can_prius::Steering1Msg>();
+      stMsg->header.stamp = timestamp;
+      stMsg->header.frame_id = _frameId;
+      stMsg->header.seq = _st1PacketCounter++;
+      stMsg->value = st.mValue;
+      _steering1Publisher.publish(stMsg);
+    }
     _st1Freq->tick();
   }
 
@@ -137,7 +141,7 @@ namespace prius {
   }
 
   void CANPriusNode::spin() {
-    _canConnection.reset(new CANConnection(_canDeviceStr));
+    _canConnection = std::make_shared<CANConnection>(_canDeviceStr);
     PRIUSReader reader(*_canConnection);
     Timer timer;
     while (_nodeHandle.ok()) {
